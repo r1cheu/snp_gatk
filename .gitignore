@@ -4,7 +4,7 @@ logs/**
 .snakemake
 .snakemake/**
 data
-ref_scripts/
+ref_script/
 
 #singularity
 *.def
