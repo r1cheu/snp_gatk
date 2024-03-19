@@ -2,3 +2,16 @@
 # Please follow the best practices: 
 # https://snakemake.readthedocs.io/en/stable/snakefiles/best_practices.html,
 # in particular regarding the standardized folder structure mentioned there. 
+include: "rules/common.smk"
+
+singularity: config["singularity_sif"]
+
+rule all:
+    input:
+        "results/called/joint.vcf.gz",
+
+##### Modules #####
+
+include: "rules/ref.smk"
+include: "rules/mapping.smk"
+include: "rules/calling.smk"

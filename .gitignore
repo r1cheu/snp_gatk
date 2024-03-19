@@ -3,3 +3,9 @@ resources/**
 logs/**
 .snakemake
 .snakemake/**
+data
+ref_scripts/
+
+#singularity
+*.def
+*.sif

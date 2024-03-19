@@ -1,0 +1,2 @@
+sample	platform	fq1	fq2
+R-246	ILLUMINA	data/reads/R-246.1.fastq.gz	data/reads/R-246.2.fastq.gz
