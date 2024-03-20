@@ -2,7 +2,7 @@ rule call_variants:
     input: 
         bam=get_sample_bams,
         ref="resources/IRGSP-1.0_genome.fasta",
-        idx="resources/IRGSP-1.0_genome.fasta.dict",
+        idx="resources/IRGSP-1.0_genome.dict",
     output: 
         gvcf=protected("results/called/{sample}.g.vcf.gz"),
     log:
@@ -29,7 +29,7 @@ rule joint_calling:
     input: 
         db="results/called/genomics_db",
         ref="resources/IRGSP-1.0_genome.fasta",
-        idx="resources/IRGSP-1.0_genome.fasta.dict",
+        idx="resources/IRGSP-1.0_genome.dict",
     output: 
         vcf="results/called/joint.vcf.gz",
     log:

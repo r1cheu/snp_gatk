@@ -15,8 +15,8 @@ rule genome_dict:
     log:
         "logs/samtools/create_dict.log"
     cache: True
-    run:
-        "samtools dict {input} > {output} 2> {log}"
+    shell:
+        "samtools dict {input} > {output} > {log} 2>&1"
 
 rule bwa_index:
     input: 
@@ -28,5 +28,5 @@ rule bwa_index:
     resources:
         mem_mb=3000
     cache: True
-    run:
-        "bwa index {input} 2> {log}"
+    shell:
+        "bwa index {input} > {log} 2>&1"

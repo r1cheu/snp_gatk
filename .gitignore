@@ -7,5 +7,4 @@ data
 ref_script/
 
 #singularity
-*.def
 *.sif

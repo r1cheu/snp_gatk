@@ -8,9 +8,11 @@ rule fastp_trim_reads_pe:
         r2=temp("results/trimmed/{sample}.2.fastq.gz")
     log:
         html="logs/fastp/{sample}.html", json="logs/fastp/{sample}.json"
+    resources:
+        ntasks=4
     shell:
         "fastp -i {input.r1} -I {input.r2} -o {output.r1} -O {output.r2} "
-        "-h {log.html} -j {log.json}"
+        "-h {log.html} -j {log.json} -w {resources.ntasks}"
 
 
 rule map_reads:
@@ -25,10 +27,11 @@ rule map_reads:
         index=lambda w, input: os.path.splitext(input.idx[0])[0],
         extra=get_read_group,
         sort_order="coordinate",
-    threads: 8
+    resources:
+        ntasks=4
     shell:
-        "(bwa mem -t {threads} {params.extra} {params.index} {input.reads} | "
-        "samtools sort -T {output}.tmp -o {output} - ) 2> {log}"
+        "bwa mem -t {resources.ntasks} {params.extra} {params.index} {input.reads} | "
+        "samtools sort -T {output}.tmp -o {output} - > {log} 2>&1"
     
 
 rule mark_duplicates:

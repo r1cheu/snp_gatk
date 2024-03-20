@@ -1,0 +1,18 @@
+executor: 
+  "slurm"
+jobs: 
+  200
+
+printshellcmds: true
+use-singularity: true
+max-jobs-per-second: 10
+latency-wait: 10
+max-status-checks-per-second: 5
+scheduler: greedy
+local-cores: 1
+default-resources:
+    slurm_partition: "normal"
+    slurm_account:   "rlchen"
+    mem_mb: 8000
+    nodes: 1
+    ntasks: 1

@@ -4,7 +4,7 @@
 # in particular regarding the standardized folder structure mentioned there. 
 include: "rules/common.smk"
 
-singularity: config["singularity_sif"]
+singularity: config["sif_path"]
 
 rule all:
     input:
