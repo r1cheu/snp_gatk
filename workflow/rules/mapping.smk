@@ -10,6 +10,7 @@ rule fastp_trim_reads_pe:
         html="logs/fastp/{sample}.html", json="logs/fastp/{sample}.json"
     resources:
         ntasks=4
+        mem_mb=
     shell:
         "fastp -i {input.r1} -I {input.r2} -o {output.r1} -O {output.r2} "
         "-h {log.html} -j {log.json} -w {resources.ntasks}"
@@ -29,6 +30,7 @@ rule map_reads:
         sort_order="coordinate",
     resources:
         ntasks=4
+        mem_mb=
     shell:
         "bwa mem -t {resources.ntasks} {params.extra} {params.index} {input.reads} | "
         "samtools sort -T {output}.tmp -o {output} - > {log} 2>&1"

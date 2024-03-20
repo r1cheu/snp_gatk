@@ -26,3 +26,14 @@ sudo singularity build snp_gatk.sif snp_call.def
 ### we alse provide a pre-built singularity image
 ```
 
+### Prepare Samples
+modify config/samples.tsv and config/units.tsv.
+
+### Modify the config file
+modify the config/config.yaml file to fit your needs.
+e.g. sif: /path/to/snp_gatk.sif
+### Run the workflow
+
+```bash
+snakemake --profile cluster --cache
+```
