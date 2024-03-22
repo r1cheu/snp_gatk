@@ -85,7 +85,7 @@ chmod a+x ${GATK_HOME}/gatk
 
 ###############################################
 #HTSLIB 1.9
-HTSLIB_VERSION=1.9
+HTSLIB_VERSION=1.19.1
 HTSLIB_HOME=${APPS_ROOT}/htslib/${HTSLIB_VERSION}
 
 MANPATH=$MANPATH:${HTSLIB_HOME}/share/man
@@ -107,9 +107,26 @@ wget https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htsl
 && make install
 
 ###############################################
+#bcftools 1.9
+BCFTOOLS_VERSION=1.19
+BCFTOOLS_HOME=${APPS_ROOT}/bcftools/${BCFTOOLS_VERSION}
+
+
+wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 \
+&& tar xjf bcftools-${HTSLIB_VERSION}.tar.bz2 \
+&& rm bcftools-${HTSLIB_VERSION}.tar.bz2 \
+&& cd bcftools-${HTSLIB_VERSION} \
+&& autoheader \
+&& autoconf  \
+&& ./configure --prefix=${BCFTOOLS_HOME} --with-htslib=${HTSLIB_HOME} \
+&& make \
+&& make install
+
+
+###############################################
 #SAMTOOLS = 'samtools/intel/1.9'
 
-SAMTOOLS_VERSION=1.9
+SAMTOOLS_VERSION=1.19.2
 SAMTOOLS_HOME=${APPS_ROOT}/samtools/${SAMTOOLS_VERSION}
 
 MANPATH=${SAMTOOLS_HOME}/share/man
@@ -150,7 +167,7 @@ export GATK_LOCAL_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-local.jar
 export GATK_SPARK_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-spark.jar
 export GATK_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-local.jar
 export PATH=${GATK_HOME}:${PATH}
-export HTSLIB_VERSION=1.9
+export HTSLIB_VERSION=1.19.1
 export HTSLIB_HOME=${APPS_ROOT}/htslib/${HTSLIB_VERSION}
 export MANPATH=$MANPATH:${HTSLIB_HOME}/share/man
 export PATH=${PATH}:${HTSLIB_HOME}/bin
@@ -159,7 +176,7 @@ export PKG_CONFIG_PATH=${HTSLIB_HOME}/lib/pkgconfig
 export HTSLIB_HOME=${HTSLIB_HOME}
 export HTSLIB_INC=${HTSLIB_HOME}/include
 export HTSLIB_LIB=${HTSLIB_HOME}/lib
-export SAMTOOLS_VERSION=1.9
+export SAMTOOLS_VERSION=1.19.2
 export SAMTOOLS_HOME=${APPS_ROOT}/samtools/${SAMTOOLS_VERSION}
 export MANPATH=${SAMTOOLS_HOME}/share/man
 export PATH=${SAMTOOLS_HOME}/bin:${PATH}
@@ -167,6 +184,10 @@ export LD_LIBRARY_PATH=${SAMTOOLS_HOME}/lib:${LD_LIBRARY_PATH}
 export SAMTOOLS_HOME=${SAMTOOLS_HOME}
 export SAMTOOLS_INC=${SAMTOOLS_HOME}/include
 export SAMTOOLS_LIB=${SAMTOOLS_HOME}/lib
+export BCFTOOLS_VERSION=1.19
+export BCFTOOLS_HOME=${APPS_ROOT}/bcftools/${BCFTOOLS_VERSION}
+export PATH=${BCFTOOLS_HOME}/bin:${PATH}
+
 %runscript
 exec /bin/bash "$@"
 %startscript

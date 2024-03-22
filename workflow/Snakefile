@@ -6,12 +6,15 @@ include: "rules/common.smk"
 
 singularity: config["sif_path"]
 
+CHROMOSOMES = [f"chr{i:02d}" for i in range(1, 13)]
+
 rule all:
     input:
-        "results/called/joint.vcf.gz",
-
+        expand("results/vcf/all.{chrom}.vcf.gz", chrom=CHROMOSOMES),
+        expand("results/all.snp.final.vcf.gz")
 ##### Modules #####
 
 include: "rules/ref.smk"
 include: "rules/mapping.smk"
 include: "rules/calling.smk"
+include: "rules/filter.smk"

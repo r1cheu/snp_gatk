@@ -49,3 +49,16 @@ def get_sample_bams(wildcards):
         "results/dedup/{sample}.sorted.bam",
         sample=wildcards.sample,
     )
+
+def get_sample_bams_idx(wildcards):
+    """Get all aligned reads of given sample."""
+    return expand(
+        "results/dedup/{sample}.sorted.bam.bai",
+        sample=wildcards.sample,
+    )
+def get_vcfs(wildcards):
+    """Get all VCF files of given sample."""
+    return expand(
+        "results/vcf/{sample}.vcf.gz",
+        sample=wildcards.sample,
+    )
