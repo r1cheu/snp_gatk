@@ -6,5 +6,9 @@ logs/**
 data
 ref_script/
 
+# out of slurm log
+*.out
+*.pdf
+run.sh
 #singularity
 *.sif

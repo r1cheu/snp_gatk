@@ -13,11 +13,9 @@ rule merge_vcfs:
     input: 
         "results/vcf/merge_list.txt"
     output:
-        "results/all.vcf.gz"
+        protected("results/all.vcf.gz")
     log:
         "logs/gatk/merge_vcfs.log"
-    benchmark:
-        "logs/gatk/merge_vcfs.benchmark"
     shell: 
         "gatk MergeVcfs -I {input} -O {output} > {log} 2>&1"
 
@@ -28,8 +26,8 @@ rule select_snp:
         "results/all.snp.vcf.gz"
     log:
         "logs/gatk/select_snp.log"
-    benchmark:
-        "logs/gatk/select_snp.benchmark"
+    resources:
+        mem_mb=8000
     shell:
         "gatk SelectVariants -V {input} -select-type SNP -O {output} > {log} 2>&1"
 
@@ -44,6 +42,8 @@ rule filter_snp:
         "logs/gatk/filter_snp.log"
     benchmark:
         "logs/gatk/filter_snp.benchmark"
+    resources:
+        mem_mb=8000
     shell:
         "gatk VariantFiltration -R {input.ref} --variant {input.vcf} "
         "--cluster-size 3 --cluster-window-size 10 --filter-expression "
@@ -59,5 +59,9 @@ rule final_vcf:
         "results/all.snp.final.vcf.gz"
     log:
         "logs/gatk/final_vcf.log"
+    benchmark:
+        "logs/gatk/final_vcf.benchmark"
+    resources:
+        mem_mb=8000
     shell:
         "bcftools view -f PASS {input} -Oz -o {output}"

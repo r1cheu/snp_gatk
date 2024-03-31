@@ -9,8 +9,9 @@ rule call_variants:
         gvcf=protected("results/called/gvcfs/{sample}.g.vcf.gz"),
     log:
         "logs/gatk/haplotypecaller/{sample}.log",
-    benchmark:
-        "logs/gatk/haplotypecaller/{sample}.benchmark",
+    resources:
+        cpus_per_task=4,
+        mem_mb=8000
     shell:
         "gatk HaplotypeCaller -R {input.ref} -I {input.bam} -O {output.gvcf} "
         "-ERC GVCF > {log} 2>&1"
@@ -24,9 +25,11 @@ rule genomics_db_import:
     log:
         "logs/gatk/genomics_db/genomics_db_import_{chrom}.log",
     benchmark:
-        "logs/gatk/genomics_db/genomics_db_import_{chrom}.benchmark",
+        "results/called/genome_db/{genomics_db_import_{chrom}.benchmark",
     resources:
         cpus_per_task=4,
+        mem_mb=72000,
+        slurm_partition='fat',
     shell:
         """
         gatk GenomicsDBImport --genomicsdb-workspace-path {output.db} \
@@ -42,11 +45,14 @@ rule joint_calling:
         ref="resources/IRGSP-1.0_genome.fasta",
         idx="resources/IRGSP-1.0_genome.dict",
     output: 
-        vcf="results/vcf/all.{chrom}.vcf.gz",
+        vcf=protected("results/vcf/all.{chrom}.vcf.gz"),
     log:
         "logs/gatk/joint_calling/{chrom}_joint_calling.log",
     benchmark:
         "logs/gatk/joint_calling/{chrom}_joint_calling.benchmark",
+    resources:
+        mem_mb=72000,
+        slurm_partition='fat',
     shell:
         "gatk GenotypeGVCFs -R {input.ref} -V gendb://{input.db} "
         "-O {output.vcf} 2> {log} 2>&1"

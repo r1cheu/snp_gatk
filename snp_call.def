@@ -14,6 +14,8 @@ java-1.8.0-openjdk-devel \
 autoconf \
 automake \
 make \
+zip \
+unzip \
 gcc \
 perl-Data-Dumper \
 zlib-devel \
@@ -62,9 +64,9 @@ mkdir -p ${PICARD_HOME}
 wget https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard.jar -O ${PICARD_JAR}
 
 ###############################################
-#GATK = 'gatk/4.5.0.0'
+#GATK = 'gatk/4.1.4.0'
 
-GATK_VERSION=4.5.0.0
+GATK_VERSION=4.1.4.0
 
 GATK_HOME=${APPS_ROOT}/gatk/${GATK_VERSION}
 
@@ -113,9 +115,9 @@ BCFTOOLS_HOME=${APPS_ROOT}/bcftools/${BCFTOOLS_VERSION}
 
 
 wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 \
-&& tar xjf bcftools-${HTSLIB_VERSION}.tar.bz2 \
-&& rm bcftools-${HTSLIB_VERSION}.tar.bz2 \
-&& cd bcftools-${HTSLIB_VERSION} \
+&& tar xjf bcftools-${BCFTOOLS_VERSION}.tar.bz2 \
+&& rm bcftools-${BCFTOOLS_VERSION}.tar.bz2 \
+&& cd bcftools-${BCFTOOLS_VERSION} \
 && autoheader \
 && autoconf  \
 && ./configure --prefix=${BCFTOOLS_HOME} --with-htslib=${HTSLIB_HOME} \
@@ -161,7 +163,7 @@ export PICARD_JAR=${PICARD_HOME}/picard-${PICARD_VERSION}.jar
 export FASTP_VERSION=0.23.4
 export FASTP_HOME=${APPS_ROOT}/fastp/${FASTP_VERSION}
 export PATH=${FASTP_HOME}:${PATH}
-export GATK_VERSION=4.1.3.0
+export GATK_VERSION=4.1.4.0
 export GATK_HOME=${APPS_ROOT}/gatk/${GATK_VERSION}
 export GATK_LOCAL_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-local.jar
 export GATK_SPARK_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-spark.jar

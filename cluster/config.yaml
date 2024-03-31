@@ -1,7 +1,7 @@
 executor: 
   "slurm"
 jobs: 
-  200
+  600
 
 printshellcmds: true
 use-singularity: true

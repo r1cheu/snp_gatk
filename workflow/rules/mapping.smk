@@ -12,7 +12,8 @@ rule fastp_trim_reads_pe:
     benchmark:
         "logs/fastp/{sample}.bench"
     resources:
-        cpus_per_task=4
+        cpus_per_task=4,
+        mem_mb=4000
     shell:
         "fastp -i {input.r1} -I {input.r2} -o {output.r1} -O {output.r2} "
         "-h {log.html} -j {log.json} -w {resources.cpus_per_task}"
@@ -26,13 +27,12 @@ rule map_reads:
         temp("results/mapped/{sample}.bam"),
     log:
         "logs/bwa/{sample}.log"
-    benchmark:
-        "logs/bwa/{sample}.bench"
     params:
         index=lambda w, input: os.path.splitext(input.idx[0])[0],
         extra=get_read_group,
         sort_order="coordinate",
     resources:
+        mem_mb=2000,
         cpus_per_task=4
     shell:
         "bwa mem -t {resources.cpus_per_task} -M {params.extra} {params.index} {input.reads} | "
@@ -44,12 +44,15 @@ rule sort_bam:
         "results/mapped/{sample}.bam"
     output:
         temp("results/mapped/{sample}.sorted.bam")
-    benchmark:
-        "logs/picard/sort/{sample}.bench"
+    log:
+        "logs/picard/sort/{sample}.log"
+    resources:
+        mem_mb=8000
     shell:
-        "gatk SortSam -I {input} -O {output} --SORT_ORDER coordinate"
+        "gatk SortSam -I {input} -O {output} --SORT_ORDER coordinate > {log} 2>&1"
 
 
+# 
 rule mark_duplicates:
     input:
         "results/mapped/{sample}.sorted.bam"
@@ -60,10 +63,13 @@ rule mark_duplicates:
         "logs/picard/dedup/{sample}.log" 
     benchmark:
         "logs/picard/dedup/{sample}.bench"
+    resources:
+        mem_mb=24000
     shell:
         "gatk MarkDuplicates -I {input} -O {output.bam} -M {output.metrics} "
         "--VALIDATION_STRINGENCY SILENT --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 "
         "--ASSUME_SORT_ORDER 'coordinate' > {log} 2>&1"
+
 
 rule index_bam:
     input:
