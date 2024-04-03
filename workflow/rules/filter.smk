@@ -16,8 +16,12 @@ rule merge_vcfs:
         protected("results/all.vcf.gz")
     log:
         "logs/gatk/merge_vcfs.log"
+    resources:
+        mem_mb=16000
     shell: 
-        "gatk MergeVcfs -I {input} -O {output} > {log} 2>&1"
+        "gatk --java-options '-Xmx{resources.mem_mb}m' MergeVcfs -I {input} "
+        "-O {output} > {log} 2>&1"
+
 
 rule select_snp:
     input:
@@ -29,7 +33,8 @@ rule select_snp:
     resources:
         mem_mb=8000
     shell:
-        "gatk SelectVariants -V {input} -select-type SNP -O {output} > {log} 2>&1"
+        "gatk --java-options '-Xmx{resources.mem_mb}m' SelectVariants "
+        "-V {input} -select-type SNP -O {output} > {log} 2>&1"
 
 
 rule filter_snp:
@@ -45,7 +50,8 @@ rule filter_snp:
     resources:
         mem_mb=8000
     shell:
-        "gatk VariantFiltration -R {input.ref} --variant {input.vcf} "
+        "gatk --java-options '-Xmx{resources.mem_mb}m' VariantFiltration "
+        "-R {input.ref} --variant {input.vcf} "
         "--cluster-size 3 --cluster-window-size 10 --filter-expression "
         "'QD<10.00' --filter-name lowQD --filter-expression 'FS>15.000' "
         "--filter-name highFS --genotype-filter-expression 'DP>200||DP<5' "

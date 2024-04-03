@@ -32,7 +32,7 @@ rule map_reads:
         extra=get_read_group,
         sort_order="coordinate",
     resources:
-        mem_mb=2000,
+        mem_mb=4000,
         cpus_per_task=4
     shell:
         "bwa mem -t {resources.cpus_per_task} -M {params.extra} {params.index} {input.reads} | "
@@ -49,10 +49,10 @@ rule sort_bam:
     resources:
         mem_mb=8000
     shell:
-        "gatk SortSam -I {input} -O {output} --SORT_ORDER coordinate > {log} 2>&1"
+        "gatk --java-options '-Xmx{resources.mem_mb}m' SortSam -I {input} "
+        "-O {output} --SORT_ORDER coordinate > {log} 2>&1"
 
 
-# 
 rule mark_duplicates:
     input:
         "results/mapped/{sample}.sorted.bam"
@@ -66,7 +66,8 @@ rule mark_duplicates:
     resources:
         mem_mb=24000
     shell:
-        "gatk MarkDuplicates -I {input} -O {output.bam} -M {output.metrics} "
+        "gatk --java-options '-Xmx{resources.mem_mb}' MarkDuplicates "
+        "-I {input} -O {output.bam} -M {output.metrics} "
         "--VALIDATION_STRINGENCY SILENT --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 "
         "--ASSUME_SORT_ORDER 'coordinate' > {log} 2>&1"
 

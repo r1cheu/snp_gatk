@@ -65,3 +65,4 @@ R-744	ILLUMINA	data/reads/R-744.1.fastq.gz	data/reads/R-744.2.fastq.gz
 R-753	ILLUMINA	data/reads/R-753.1.fastq.gz	data/reads/R-753.2.fastq.gz
 R-92	ILLUMINA	data/reads/R-92.1.fastq.gz	data/reads/R-92.2.fastq.gz
 R-94	ILLUMINA	data/reads/R-94.1.fastq.gz	data/reads/R-94.2.fastq.gz
+R20037639-P-F1-mix3-Q17_combined	ILLUMINA	data/reads/R20037639-P-F1-mix3-Q17_combined.1.fastq.gz	data/reads/R20037639-P-F1-mix3-Q17_combined.2.fastq.gz

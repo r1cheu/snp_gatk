@@ -5,7 +5,8 @@ import pandas as pd
 
 
 def get_args():
-    parser = ArgumentParser()
+    parser = ArgumentParser("Generate input csv files for snp_gatk workflow."
+                            "example: python gen_input_csv.py -I data/reads -O config -s .1.fastq.gz")
     parser.add_argument("-I", "--input_dir", type=str) 
     parser.add_argument("-O", "--output_dir", type=str)
     parser.add_argument("-s", '--suffix', type=str, default=".1.fastq.gz")
