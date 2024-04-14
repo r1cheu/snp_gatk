@@ -33,14 +33,11 @@ sudo singularity build snp_gatk.sif snp_call.def
 ```
 
 ### Prepare Samples
-Note the workflow only accept suffix *.1.fastq.gz and *.2.fastq.gz. You need to
-rename the fastq.gz file before start.
-I will add a option to use arbitrary suffix. 
-
 modify config/samples.tsv and config/units.tsv.
 or use the provided python script
 ```python
-python workflow/script/gen_input_csv.py -I /dir/path/to/fastq.gz -O config
+python workflow/script/gen_input_csv.py -I /dir/path/to/fastq.gz -O config \
+    --fq1 .1.fastq.gz --fq2 .2.fastq.gz
 ```
 
 ### Modify the config file
