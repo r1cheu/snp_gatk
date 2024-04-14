@@ -13,7 +13,7 @@ rule call_variants:
         cpus_per_task=4,
         mem_mb=16000
     shell:
-        "gatk --java-options '-Xmx{resources.mem_mb}' HaplotypeCaller "
+        "gatk --java-options '-Xmx{resources.mem_mb}m' HaplotypeCaller "
         "-R {input.ref} -I {input.bam} -O {output.gvcf} "
         "-ERC GVCF > {log} 2>&1"
 

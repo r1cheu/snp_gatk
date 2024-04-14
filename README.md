@@ -9,6 +9,12 @@ A Snakemake workflow for `calling snp`
 
 ## Getting started
 
+### Install miniforge
+```bash
+wget https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh
+bash Miniforge3-Linux-x86_64.sh
+```
+
 ### Install Snakemake
 
 ```bash
@@ -27,7 +33,15 @@ sudo singularity build snp_gatk.sif snp_call.def
 ```
 
 ### Prepare Samples
+Note the workflow only accept suffix *.1.fastq.gz and *.2.fastq.gz. You need to
+rename the fastq.gz file before start.
+I will add a option to use arbitrary suffix. 
+
 modify config/samples.tsv and config/units.tsv.
+or use the provided python script
+```python
+python workflow/script/gen_input_csv.py -I /dir/path/to/fastq.gz -O config
+```
 
 ### Modify the config file
 modify the config/config.yaml file to fit your needs.

@@ -66,7 +66,7 @@ rule mark_duplicates:
     resources:
         mem_mb=24000
     shell:
-        "gatk --java-options '-Xmx{resources.mem_mb}' MarkDuplicates "
+        "gatk --java-options '-Xmx{resources.mem_mb}m' MarkDuplicates "
         "-I {input} -O {output.bam} -M {output.metrics} "
         "--VALIDATION_STRINGENCY SILENT --OPTICAL_DUPLICATE_PIXEL_DISTANCE 100 "
         "--ASSUME_SORT_ORDER 'coordinate' > {log} 2>&1"
