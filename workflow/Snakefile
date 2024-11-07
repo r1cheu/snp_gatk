@@ -11,7 +11,7 @@ CHROMOSOMES = [f"chr{i:02d}" for i in range(1, 13)]
 rule all:
     input:
         expand("results/vcf/all.{chrom}.vcf.gz", chrom=CHROMOSOMES),
-        expand("results/all.snp.final.vcf.gz")
+        expand("results/all.snp.final.vcf.gz"),
         expand("results/all.indel.final.vcf.gz")
 ##### Modules #####
 

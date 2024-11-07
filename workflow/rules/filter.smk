@@ -88,7 +88,7 @@ rule filter_indel:
         "gatk VariantFiltration --output {output} --filter-expression 'QD<10.00' "
         "--filter-expression 'FS>30.000' --filter-name lowQD --filter-name highFS "
         "--genotype-filter-expression 'DP<5||DP>200' --genotype-filter-name InvalidDP "
-        "--variant {vcf} --reference {ref} > {log} 2>&1"
+        "--variant {input.vcf} --reference {input.ref} > {log} 2>&1"
 
 
 rule final_snp_vcf:
