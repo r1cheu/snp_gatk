@@ -39,7 +39,7 @@ def main():
     sample_df.to_csv(output_dir / "samples.tsv", index=False, sep="\t")
 
     fq1_paths = [str(f) for f in input_dir.glob(f"*{args.fq1}")]
-    fq2_paths = [str(f) for f in input_dir.glob(f"*{args.fq2}")]
+    fq2_paths = [f.replace(args.fq1, args.fq2) for f in fq1_paths]
 
     units_df = pd.DataFrame(
         dict(
