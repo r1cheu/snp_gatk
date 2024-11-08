@@ -44,6 +44,7 @@ python workflow/script/gen_input_csv.py -I /dir/path/to/fastq.gz -O config \
 
 modify the config/config.yaml file to fit your needs.
 e.g. sif: /path/to/snp_gatk.sif
+and copy the reference genome to resources directory
 
 ### Run the workflow
 
@@ -53,4 +54,3 @@ snakemake --profile cluster --cache
 # if failed, rerun the failed jobs
 snakemake --profile cluster --cache --rerun-incomplete
 ```
-
