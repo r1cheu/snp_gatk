@@ -1,123 +1,156 @@
 Bootstrap: docker
 From: rockylinux:9
+# Stage: spython-base
 
 %post
-    # Update package repository
-    dnf -y update
+dnf -y update
+# Install EPEL repository
+dnf install -y epel-release
 
-    # Install EPEL repository and required packages
-    dnf install -y epel-release
-    dnf -y install \
-        git \
-        wget \
-        java-1.8.0-openjdk \
-        java-1.8.0-openjdk-devel \
-        autoconf \
-        automake \
-        make \
-        zip \
-        unzip \
-        gcc \
-        perl-Data-Dumper \
-        zlib-devel \
-        bzip2 \
-        bzip2-devel \
-        xz-devel \
-        curl-devel \
-        openssl-devel \
-        ncurses-devel \
-        graphviz
+# Install necessary packages
+dnf -y install \
+    git \
+    wget \
+    java-1.8.0-openjdk \
+    java-1.8.0-openjdk-devel \
+    autoconf \
+    automake \
+    make \
+    zip \
+    unzip \
+    gcc \
+    perl-Data-Dumper \
+    zlib-devel \
+    bzip2 \
+    bzip2-devel \
+    xz-devel \
+    curl-devel \
+    openssl-devel \
+    ncurses-devel \
+    graphviz
 
-    # Clean up DNF cache
-    dnf clean all
-    rm -rf /var/cache/dnf /tmp/*
+APPS_ROOT=/sing_tools
+mkdir -p ${APPS_ROOT}
+###############################################
+FASTP_VERSION=0.23.4
+FASTP_HOME=${APPS_ROOT}/fastp/${FASTP_VERSION}
+FASTP_BIN=${FASTP_HOME}/fastp
 
-    APPS_ROOT=/sing_tools
-    mkdir -p ${APPS_ROOT}
+mkdir -p ${FASTP_HOME}
+wget http://opengene.org/fastp/fastp.${FASTP_VERSION} -O ${FASTP_BIN}
 
-    ###############################################
-    # Install FASTP
-    FASTP_VERSION=0.23.4
-    FASTP_HOME=${APPS_ROOT}/fastp/${FASTP_VERSION}
-    FASTP_BIN=${FASTP_HOME}/fastp
+chmod a+x ${FASTP_BIN}
 
-    mkdir -p ${FASTP_HOME}
-    wget http://opengene.org/fastp/fastp.${FASTP_VERSION} -O ${FASTP_BIN}
-    chmod a+x ${FASTP_BIN}
-    rm -f fastp.${FASTP_VERSION}
+###############################################
+#BWA = 'bwa/intel/0.7.17'
 
-    ###############################################
-    # Install BWA
-    BWA_VERSION=0.7.17
-    BWA_HOME=${APPS_ROOT}/bwa/${BWA_VERSION}
-    PATH=${BWA_HOME}:${PATH}
+BWA_VERSION=0.7.17
 
-    git clone --branch v${BWA_VERSION} https://github.com/lh3/bwa.git ${BWA_HOME}
-    cd ${BWA_HOME} && make
-    cd /
-    rm -rf ${BWA_HOME}/.git
+BWA_HOME=${APPS_ROOT}/bwa/${BWA_VERSION}
+PATH=${BWA_HOME}:${PATH}
 
-    ###############################################
-    # Install Picard
-    PICARD_VERSION=2.17.11
-    JAVA_HOME=/etc/alternatives/jre
-    PICARD_HOME=${APPS_ROOT}/picard/${PICARD_VERSION}
-    PICARD_JAR=${PICARD_HOME}/picard-${PICARD_VERSION}.jar
+git clone --branch v${BWA_VERSION} https://github.com/lh3/bwa.git ${BWA_HOME}
+cd ${BWA_HOME} && make && cd
 
-    mkdir -p ${PICARD_HOME}
-    wget https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard.jar -O ${PICARD_JAR}
+###############################################
+#PICARD = 'picard/2.17.11'
 
-    ###############################################
-    # Install GATK
-    GATK_VERSION=4.6.1.0
-    GATK_HOME=${APPS_ROOT}/gatk/${GATK_VERSION}
+PICARD_VERSION=2.17.11
 
-    wget https://github.com/broadinstitute/gatk/releases/download/${GATK_VERSION}/gatk-${GATK_VERSION}.zip
-    unzip gatk-${GATK_VERSION}.zip -d ${APPS_ROOT}/gatk
-    mv ${APPS_ROOT}/gatk/gatk-${GATK_VERSION} ${GATK_HOME}
-    rm -f gatk-${GATK_VERSION}.zip
+JAVA_HOME=/etc/alternatives/jre
+PICARD_HOME=${APPS_ROOT}/picard/${PICARD_VERSION}
+PICARD_JAR=${PICARD_HOME}/picard-${PICARD_VERSION}.jar
 
-    ###############################################
-    # Install HTSLIB
-    HTSLIB_VERSION=1.19.1
-    HTSLIB_HOME=${APPS_ROOT}/htslib/${HTSLIB_VERSION}
+mkdir -p ${PICARD_HOME}
+wget https://github.com/broadinstitute/picard/releases/download/${PICARD_VERSION}/picard.jar -O ${PICARD_JAR}
 
-    wget https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2
-    tar xjf htslib-${HTSLIB_VERSION}.tar.bz2
-    cd htslib-${HTSLIB_VERSION}
-    ./configure --prefix=${HTSLIB_HOME}
-    make && make install
-    cd /
-    rm -rf htslib-${HTSLIB_VERSION} htslib-${HTSLIB_VERSION}.tar.bz2
+###############################################
+#GATK = 'gatk/4.6.1.0'
 
-    ###############################################
-    # Install BCFTOOLS
-    BCFTOOLS_VERSION=1.19
-    BCFTOOLS_HOME=${APPS_ROOT}/bcftools/${BCFTOOLS_VERSION}
+GATK_VERSION=4.6.1.0
 
-    wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2
-    tar xjf bcftools-${BCFTOOLS_VERSION}.tar.bz2
-    cd bcftools-${BCFTOOLS_VERSION}
-    ./configure --prefix=${BCFTOOLS_HOME} --with-htslib=${HTSLIB_HOME}
-    make && make install
-    cd /
-    rm -rf bcftools-${BCFTOOLS_VERSION} bcftools-${BCFTOOLS_VERSION}.tar.bz2
+GATK_HOME=${APPS_ROOT}/gatk/${GATK_VERSION}
 
-    ###############################################
-    # Install SAMTOOLS
-    SAMTOOLS_VERSION=1.19.2
-    SAMTOOLS_HOME=${APPS_ROOT}/samtools/${SAMTOOLS_VERSION}
+GATK_LOCAL_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-local.jar
+GATK_SPARK_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-spark.jar
+GATK_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-local.jar
+PATH=${GATK_HOME}:${PATH}
 
-    wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2
-    tar xjf samtools-${SAMTOOLS_VERSION}.tar.bz2
-    cd samtools-${SAMTOOLS_VERSION}
-    ./configure --prefix=${SAMTOOLS_HOME} --with-htslib=${HTSLIB_HOME}
-    make && make install
-    cd /
-    rm -rf samtools-${SAMTOOLS_VERSION} samtools-${SAMTOOLS_VERSION}.tar.bz2
+wget https://github.com/broadinstitute/gatk/releases/download/${GATK_VERSION}/gatk-${GATK_VERSION}.zip \
+&& mkdir ${APPS_ROOT}/gatk \
+&& unzip gatk-${GATK_VERSION}.zip \
+&& mv gatk-${GATK_VERSION} ${APPS_ROOT}/gatk/${GATK_VERSION} \
+&& rm gatk-${GATK_VERSION}.zip
 
-    # Final cleanup to remove any remaining temp files
-    rm -rf /tmp/*
+chmod a+x ${GATK_HOME}/gatk
+
+
+
+###############################################
+#HTSLIB 1.9
+HTSLIB_VERSION=1.19.1
+HTSLIB_HOME=${APPS_ROOT}/htslib/${HTSLIB_VERSION}
+
+MANPATH=$MANPATH:${HTSLIB_HOME}/share/man
+PATH=${PATH}:${HTSLIB_HOME}/bin
+LD_LIBRARY_PATH=${HTSLIB_HOME}/lib:${LD_LIBRARY_PATH}
+PKG_CONFIG_PATH=${HTSLIB_HOME}/lib/pkgconfig
+HTSLIB_HOME=${HTSLIB_HOME}
+HTSLIB_INC=${HTSLIB_HOME}/include
+HTSLIB_LIB=${HTSLIB_HOME}/lib
+
+wget https://github.com/samtools/htslib/releases/download/${HTSLIB_VERSION}/htslib-${HTSLIB_VERSION}.tar.bz2 \
+&& tar xjf htslib-${HTSLIB_VERSION}.tar.bz2 \
+&& rm htslib-${HTSLIB_VERSION}.tar.bz2 \
+&& cd htslib-${HTSLIB_VERSION} \
+&& autoheader \
+&& autoconf  \
+&& ./configure --prefix=${HTSLIB_HOME} \
+&& make \
+&& make install
+
+###############################################
+#bcftools 1.9
+BCFTOOLS_VERSION=1.19
+BCFTOOLS_HOME=${APPS_ROOT}/bcftools/${BCFTOOLS_VERSION}
+
+
+wget https://github.com/samtools/bcftools/releases/download/${BCFTOOLS_VERSION}/bcftools-${BCFTOOLS_VERSION}.tar.bz2 \
+&& tar xjf bcftools-${BCFTOOLS_VERSION}.tar.bz2 \
+&& rm bcftools-${BCFTOOLS_VERSION}.tar.bz2 \
+&& cd bcftools-${BCFTOOLS_VERSION} \
+&& autoheader \
+&& autoconf  \
+&& ./configure --prefix=${BCFTOOLS_HOME} --with-htslib=${HTSLIB_HOME} \
+&& make \
+&& make install
+
+
+###############################################
+#SAMTOOLS = 'samtools/intel/1.9'
+
+SAMTOOLS_VERSION=1.19.2
+SAMTOOLS_HOME=${APPS_ROOT}/samtools/${SAMTOOLS_VERSION}
+
+MANPATH=${SAMTOOLS_HOME}/share/man
+PATH=${SAMTOOLS_HOME}/bin:${PATH}
+LD_LIBRARY_PATH=${SAMTOOLS_HOME}/lib:${LD_LIBRARY_PATH}
+SAMTOOLS_HOME=${SAMTOOLS_HOME}
+SAMTOOLS_INC=${SAMTOOLS_HOME}/include
+SAMTOOLS_LIB=${SAMTOOLS_HOME}/lib
+
+wget https://github.com/samtools/samtools/releases/download/${SAMTOOLS_VERSION}/samtools-${SAMTOOLS_VERSION}.tar.bz2 \
+&& tar xjf samtools-${SAMTOOLS_VERSION}.tar.bz2 \
+&& rm samtools-${SAMTOOLS_VERSION}.tar.bz2 \
+&& cd samtools-${SAMTOOLS_VERSION} \
+&& autoheader \
+&& autoconf -Wno-syntax \
+&& ./configure --prefix=${SAMTOOLS_HOME} --with-htslib=${HTSLIB_HOME} \
+&& make \
+&& make install
+
+#################################################
+
 
 %environment
 export APPS_ROOT=/sing_tools
@@ -133,22 +166,32 @@ export FASTP_HOME=${APPS_ROOT}/fastp/${FASTP_VERSION}
 export PATH=${FASTP_HOME}:${PATH}
 export GATK_VERSION=4.6.1.0
 export GATK_HOME=${APPS_ROOT}/gatk/${GATK_VERSION}
+export GATK_LOCAL_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-local.jar
+export GATK_SPARK_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-spark.jar
+export GATK_JAR=${GATK_HOME}/gatk-package-${GATK_VERSION}-local.jar
 export PATH=${GATK_HOME}:${PATH}
 export HTSLIB_VERSION=1.19.1
 export HTSLIB_HOME=${APPS_ROOT}/htslib/${HTSLIB_VERSION}
-export PATH=${HTSLIB_HOME}/bin:${PATH}
+export MANPATH=$MANPATH:${HTSLIB_HOME}/share/man
+export PATH=${PATH}:${HTSLIB_HOME}/bin
 export LD_LIBRARY_PATH=${HTSLIB_HOME}/lib:${LD_LIBRARY_PATH}
+export PKG_CONFIG_PATH=${HTSLIB_HOME}/lib/pkgconfig
+export HTSLIB_HOME=${HTSLIB_HOME}
+export HTSLIB_INC=${HTSLIB_HOME}/include
+export HTSLIB_LIB=${HTSLIB_HOME}/lib
 export SAMTOOLS_VERSION=1.19.2
 export SAMTOOLS_HOME=${APPS_ROOT}/samtools/${SAMTOOLS_VERSION}
+export MANPATH=${SAMTOOLS_HOME}/share/man
 export PATH=${SAMTOOLS_HOME}/bin:${PATH}
 export LD_LIBRARY_PATH=${SAMTOOLS_HOME}/lib:${LD_LIBRARY_PATH}
+export SAMTOOLS_HOME=${SAMTOOLS_HOME}
+export SAMTOOLS_INC=${SAMTOOLS_HOME}/include
+export SAMTOOLS_LIB=${SAMTOOLS_HOME}/lib
 export BCFTOOLS_VERSION=1.19
 export BCFTOOLS_HOME=${APPS_ROOT}/bcftools/${BCFTOOLS_VERSION}
 export PATH=${BCFTOOLS_HOME}/bin:${PATH}
 
 %runscript
 exec /bin/bash "$@"
-
 %startscript
 exec /bin/bash "$@"
-
