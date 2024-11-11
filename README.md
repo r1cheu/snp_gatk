@@ -36,21 +36,17 @@ modify config/samples.tsv and config/units.tsv.
 or use the provided python script
 
 ```python
-python workflow/script/gen_input_csv.py -I /dir/path/to/fastq.gz -O config \
+python workflow/script/gen_input_csv.py -I /dir/path/to/fastq.gz \
     --fq1 .1.fastq.gz --fq2 .2.fastq.gz
 ```
 
 ### Modify the config file
 
-modify the config/config.yaml file to fit your needs.
-e.g. sif: /path/to/snp_gatk.sif
-and copy the reference genome to resources directory
+modify the config/config.yaml and cluster/config.yaml file to fit your needs.
+e.g. sif: /path/to/snp_gatk.sif, slurm_partition and slurm_account, etc.
 
 ### Run the workflow
 
 ```bash
-snakemake --profile cluster --cache
-
-# if failed, rerun the failed jobs
 snakemake --profile cluster --cache --rerun-incomplete
 ```
