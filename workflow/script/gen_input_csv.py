@@ -1,6 +1,7 @@
 from pathlib import Path
 from argparse import ArgumentParser
 import pandas as pd
+import logging
 
 
 def get_args():
@@ -29,6 +30,7 @@ def get_args():
 
 def main():
     args = get_args()
+    logging.basicConfig(level=logging.INFO, format="%(message)s")
     input_dir = Path(args.input_dir)
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -49,6 +51,10 @@ def main():
             fq2=fq2_paths,
         )
     )
+
+    logging.info(f"Writing to {output_dir}/units.tsv")
+    logging.info(f"Head of units.tsv: \n{units_df.head()}")
+
     units_df.to_csv(output_dir / "units.tsv", index=False, sep="\t")
 
 

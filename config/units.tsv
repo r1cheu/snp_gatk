@@ -1,2 +1,2 @@
 sample	platform	fq1	fq2
-test	ILLUMINA	data/test_1.fastq.gz	data/test_2.fastq.gz
+test1	ILLUMINA	data/test1.1.fastq.gz	data/test1.2.fastq.gz

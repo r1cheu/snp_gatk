@@ -1,11 +1,11 @@
 rule call_variants:
-    input: 
+    input:
         bam=get_sample_bams,
         bam_idx=get_sample_bams_idx,
         ref="resources/IRGSP-1.0_genome.fasta",
         fai="resources/IRGSP-1.0_genome.fasta.fai",
         idx="resources/IRGSP-1.0_genome.dict",
-    output: 
+    output:
         gvcf=protected("results/called/gvcfs/{sample}.g.vcf.gz"),
     log:
         "logs/gatk/haplotypecaller/{sample}.log",
@@ -18,9 +18,9 @@ rule call_variants:
         "-ERC GVCF > {log} 2>&1"
 
 rule generate_sample_map:
-    input: 
+    input:
         gvcfs=expand("results/called/gvcfs/{sample}.g.vcf.gz", sample=samples.index),
-    output: 
+    output:
         temp("results/called/genome_db/sample_map")
     run:
         import os.path as osp
@@ -31,9 +31,9 @@ rule generate_sample_map:
 
 
 rule genomics_db_import:
-    input: 
+    input:
         "results/called/genome_db/sample_map",
-    output: 
+    output:
         db=directory("results/called/genome_db/{chrom}_db"),
     log:
         "logs/gatk/genomics_db/genomics_db_import_{chrom}.log",
@@ -45,7 +45,7 @@ rule genomics_db_import:
         slurm_partition='fat',
     shell:
         """
-        gatk --java-options '-Xmx{resources.mem_mb}m' GenomicsDBImport 
+        gatk --java-options '-Xmx{resources.mem_mb}m' GenomicsDBImport \
         --genomicsdb-workspace-path {output.db} \
         --batch-size 100 --reader-threads {resources.cpus_per_task} \
         --sample-name-map {input} \
@@ -54,11 +54,11 @@ rule genomics_db_import:
 
 
 rule joint_calling:
-    input: 
+    input:
         db="results/called/genome_db/{chrom}_db",
         ref="resources/IRGSP-1.0_genome.fasta",
         idx="resources/IRGSP-1.0_genome.dict",
-    output: 
+    output:
         vcf=protected("results/vcf/all.{chrom}.vcf.gz"),
     log:
         "logs/gatk/joint_calling/{chrom}_joint_calling.log",
