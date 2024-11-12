@@ -27,7 +27,7 @@ rule select_snp:
     input:
         "results/all.vcf.gz"
     output:
-        "results/all.snp.vcf.gz"
+        temp("results/all.snp.vcf.gz")
     log:
         "logs/gatk/select_snp.log"
     resources:
@@ -41,7 +41,7 @@ rule select_indel:
     input:
         "results/all.vcf.gz"
     output:
-        "results/all.indel.vcf.gz"
+        temp("results/all.indel.vcf.gz")
     log:
         "logs/gatk/select_indel.log"
     resources:
@@ -56,7 +56,7 @@ rule filter_snp:
         vcf="results/all.snp.vcf.gz",
         ref="resources/IRGSP-1.0_genome.fasta"
     output:
-        "results/all.snp.filter.vcf.gz"
+        temp("results/all.snp.filter.vcf.gz")
     log:
         "logs/gatk/filter_snp.log"
     benchmark:
@@ -77,7 +77,7 @@ rule filter_indel:
         vcf="results/all.indel.vcf.gz",
         ref="resources/IRGSP-1.0_genome.fasta"
     output:
-        "results/all.indel.filter.vcf.gz"
+        temp("results/all.indel.filter.vcf.gz")
     log:
         "logs/gatk/filter_indel.log"
     benchmark:
