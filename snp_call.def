@@ -27,7 +27,8 @@ dnf -y install \
     curl-devel \
     openssl-devel \
     ncurses-devel \
-    graphviz
+    graphviz \
+    python \
 
 APPS_ROOT=/sing_tools
 mkdir -p ${APPS_ROOT}
