@@ -1,17 +1,19 @@
 rule genome_faidx:
     input: 
-        "resources/IRGSP-1.0_genome.fasta"
+        get_ref_path()
     output:
-        "resources/IRGSP-1.0_genome.fasta.fai"
+        get_ref_path() + ".fai"
+    log:
+        "logs/samtools/create_faidx.log"
     cache: True
     shell:
         "samtools faidx {input} > {output} {log}"
 
 rule genome_dict:
     input: 
-        "resources/IRGSP-1.0_genome.fasta"
+        get_ref_path()
     output:
-        "resources/IRGSP-1.0_genome.dict"
+        get_ref_name() + ".dict"
     log:
         "logs/samtools/create_dict.log"
     cache: True
@@ -20,9 +22,9 @@ rule genome_dict:
 
 rule bwa_index:
     input: 
-        "resources/IRGSP-1.0_genome.fasta" 
+        get_ref_path()
     output: 
-        multiext("resources/IRGSP-1.0_genome.fasta", ".amb", ".ann", ".bwt", ".pac", ".sa")
+        multiext(get_ref_path(), ".amb", ".ann", ".bwt", ".pac", ".sa")
     log:
         "logs/bwa_index.log"
     resources:

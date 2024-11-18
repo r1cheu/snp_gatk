@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 from snakemake.utils import validate
 from snakemake.utils import min_version
@@ -7,12 +9,17 @@ min_version("5.18.0")
 configfile: "config/config.yaml"
 samples = pd.read_table(config["samples"]).set_index("sample", drop=False)
 units = pd.read_table(config["units"], dtype=str).set_index("sample", drop=False)
+ref_path = Path(f"resources/{config['ref']}")
 
+def get_ref_path(wildcards):
+    return str(ref_path)
+
+def get_ref_name(wildcards):
+    return str(ref_path.with_suffix(""))
 
 def is_single_end(sample):
     """Return True if sample-unit is single end."""
     return pd.isnull(units.loc[sample, "fq2"])
-
 
 def get_fastq(wildcards):
     """Get fastq files of given sample."""

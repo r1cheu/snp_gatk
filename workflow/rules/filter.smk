@@ -54,7 +54,7 @@ rule select_indel:
 rule filter_snp:
     input:
         vcf="results/all.snp.vcf.gz",
-        ref="resources/IRGSP-1.0_genome.fasta"
+        ref=get_ref_path(),
     output:
         temp("results/all.snp.filter.vcf.gz")
     log:
@@ -75,7 +75,7 @@ rule filter_snp:
 rule filter_indel:
     input:
         vcf="results/all.indel.vcf.gz",
-        ref="resources/IRGSP-1.0_genome.fasta"
+        ref=get_ref_path(),
     output:
         temp("results/all.indel.filter.vcf.gz")
     log:
