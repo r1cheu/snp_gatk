@@ -11,10 +11,10 @@ samples = pd.read_table(config["samples"]).set_index("sample", drop=False)
 units = pd.read_table(config["units"], dtype=str).set_index("sample", drop=False)
 ref_path = Path(f"resources/{config['ref']}")
 
-def get_ref_path(wildcards):
+def get_ref_path():
     return str(ref_path)
 
-def get_ref_name(wildcards):
+def get_ref_name():
     return str(ref_path.with_suffix(""))
 
 def is_single_end(sample):

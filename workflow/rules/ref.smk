@@ -1,13 +1,13 @@
 rule genome_faidx:
     input: 
-        get_ref_path()
+        lambda wildcards: get_fixed_path()
     output:
         get_ref_path() + ".fai"
     log:
         "logs/samtools/create_faidx.log"
     cache: True
     shell:
-        "samtools faidx {input} > {output} {log}"
+        "samtools faidx {input.ref} > {output} {log}"
 
 rule genome_dict:
     input: 
