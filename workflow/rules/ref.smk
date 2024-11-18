@@ -7,7 +7,7 @@ rule genome_faidx:
         "logs/samtools/create_faidx.log"
     cache: True
     shell:
-        "samtools faidx {input.ref} > {output} {log}"
+        "samtools faidx {input} > {output} {log}"
 
 rule genome_dict:
     input:
