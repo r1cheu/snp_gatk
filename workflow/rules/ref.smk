@@ -1,6 +1,6 @@
 rule genome_faidx:
-    input: 
-        lambda wildcards: get_fixed_path()
+    input:
+        get_ref_path()
     output:
         get_ref_path() + ".fai"
     log:
@@ -10,7 +10,7 @@ rule genome_faidx:
         "samtools faidx {input.ref} > {output} {log}"
 
 rule genome_dict:
-    input: 
+    input:
         get_ref_path()
     output:
         get_ref_name() + ".dict"
@@ -21,9 +21,9 @@ rule genome_dict:
         "samtools dict {input} -o {output} > {log} 2>&1"
 
 rule bwa_index:
-    input: 
+    input:
         get_ref_path()
-    output: 
+    output:
         multiext(get_ref_path(), ".amb", ".ann", ".bwt", ".pac", ".sa")
     log:
         "logs/bwa_index.log"
