@@ -1,5 +1,5 @@
 samples: config/samples.tsv
 units: config/units.tsv
-ref: IRGSP-1.0_genome.fasta
+ref: IRGSP.fasta
 
 sif_path: /data9/home/rlchen/project/snp_gatk/snpcalling.sif
